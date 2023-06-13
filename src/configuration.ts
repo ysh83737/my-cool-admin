@@ -6,6 +6,7 @@ import { join } from 'path';
 // import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
+import * as swagger from '@midwayjs/swagger';
 
 @Configuration({
   imports: [
@@ -15,6 +16,7 @@ import { ReportMiddleware } from './middleware/report.middleware';
       component: info,
       enabledEnvironment: ['local'],
     },
+    swagger,
   ],
   importConfigs: [join(__dirname, './config')],
 })
