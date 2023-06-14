@@ -21,6 +21,7 @@ export default {
         charset: 'utf8mb4',
         // 是否开启缓存
         cache: true,
+        entities: ['entity'],
       },
     },
   },

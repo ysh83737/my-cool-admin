@@ -13,7 +13,7 @@ export default {
         username: 'root',
         // TODO 设置线上数据库密码
         password: '',
-        database: 'cool',
+        database: 'my_cool',
         // 自动建表 注意：线上部署的时候不要使用，有可能导致数据丢失
         synchronize: false,
         // 打印日志
@@ -22,6 +22,7 @@ export default {
         charset: 'utf8mb4',
         // 是否开启缓存
         cache: true,
+        entities: ['entity'],
       },
     },
   },
