@@ -1,5 +1,7 @@
-import { Provide } from '@midwayjs/core';
+import { Inject, Provide } from '@midwayjs/core';
+import { Context } from '@midwayjs/koa';
 import { InjectEntityModel } from '@midwayjs/typeorm';
+import { JwtService } from '@midwayjs/jwt';
 import { MidwayCommonError } from '@midwayjs/core/dist/error/framework';
 import { Repository } from 'typeorm';
 import * as md5 from 'md5';
@@ -12,6 +14,12 @@ export class LoginService {
   @InjectEntityModel(User)
   userEntity: Repository<User>;
 
+  @Inject()
+  jwtService: JwtService;
+
+  @Inject()
+  ctx: Context;
+
   async login(login: LoginDTO) {
     const { userName, password } = login;
     const user = await this.userEntity.findOneBy({ userName });
@@ -22,7 +30,17 @@ export class LoginService {
       if (user.password !== md5(password)) {
         throw new MidwayCommonError('密码错误');
       }
-      return '登录成功';
+      const token = await this.getToken(user);
+      this.ctx.cookies.set('token', token);
+      return {
+        user,
+        token,
+      };
     }
+  }
+
+  async getToken(user: User) {
+    const { id, userName } = user;
+    return this.jwtService.sign({ id, userName });
   }
 }
