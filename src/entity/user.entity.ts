@@ -1,34 +1,34 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, Index } from 'typeorm';
 import { USER_STATUS } from '../interface/user.interface';
+import {
+  ColumnPro,
+  CreateDateColumnPro,
+  PrimaryGeneratedColumnPro,
+  UpdateDateColumnPro,
+} from '../decorator/orm-pro.decorator';
 
 /** 用户信息 */
 @Entity('user_info')
 export class User {
   @Index({ unique: true })
-  @PrimaryGeneratedColumn({
+  @PrimaryGeneratedColumnPro({
     comment: '用户id',
+    api: { example: 1 },
   })
   id: number;
 
-  @CreateDateColumn({
+  @CreateDateColumnPro({
     comment: '创建时间',
   })
   createTime: Date;
 
-  @UpdateDateColumn({
+  @UpdateDateColumnPro({
     comment: '修改时间',
   })
   updateTime: Date;
 
   @Index({ unique: true })
-  @Column({
+  @ColumnPro({
     length: 20,
     comment: '用户登录名',
   })
@@ -37,7 +37,7 @@ export class User {
   @Column({ comment: '密码' })
   password: string;
 
-  @Column({
+  @ColumnPro({
     comment: '姓名',
     length: 20,
     nullable: true,
@@ -51,39 +51,39 @@ export class User {
   })
   pwVersion: number;
 
-  @Column({
+  @ColumnPro({
     length: 20,
     comment: '用户昵称',
   })
   nickName: string;
 
-  @Column({
+  @ColumnPro({
     comment: '用户头像',
     nullable: true,
   })
   avatarUrl: string;
 
   @Index({ unique: true })
-  @Column({
+  @ColumnPro({
     comment: '手机号',
     nullable: true,
     length: 11,
   })
   phone: string;
 
-  @Column({
+  @ColumnPro({
     comment: '邮箱',
     nullable: true,
   })
   email: string;
 
-  @Column({
+  @ColumnPro({
     comment: '备注',
     nullable: true,
   })
   remark: string;
 
-  @Column({
+  @ColumnPro({
     comment: '状态  0-禁用 1-正常',
     type: 'enum',
     enum: USER_STATUS,

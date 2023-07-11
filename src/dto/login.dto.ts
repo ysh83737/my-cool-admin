@@ -1,31 +1,44 @@
 import { ApiProperty } from '@midwayjs/swagger';
+import { ResponseDTO } from './common.dto';
 import { Rule, RuleType } from '@midwayjs/validate';
+import { ParamEmptyError } from '../error/user.error';
+import { User } from '../entity/user.entity';
 
 export class LoginDTO {
   @ApiProperty({
+    required: true,
     description: '用户名',
     example: 'admin',
   })
-  @Rule(RuleType.string().required())
+  @Rule(
+    RuleType.string().required().error(new ParamEmptyError('用户名不能为空'))
+  )
   userName: string;
 
   @ApiProperty({
+    required: true,
     description: '密码',
+    format: 'password',
     example: '******',
   })
-  @Rule(RuleType.string().required())
+  @Rule(RuleType.string().required().error(new ParamEmptyError('密码不能为空')))
   password: string;
 }
-
-export class LoginResponse {
+export class LoginResultData {
   @ApiProperty({
-    description: '是否成功',
+    description: '用户信息',
+    type: User,
   })
-  success: boolean;
-
+  user: User;
   @ApiProperty({
-    description: '消息',
-    example: '登录成功',
+    description: 'token',
   })
-  message: string;
+  token: string;
+}
+export class LoginResponse extends ResponseDTO {
+  @ApiProperty({
+    description: '登录结果',
+    type: LoginResultData,
+  })
+  data: LoginResultData;
 }

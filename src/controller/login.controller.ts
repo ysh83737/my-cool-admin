@@ -18,9 +18,6 @@ export class LoginController {
   })
   async login(@Body() login: LoginDTO) {
     const result = await this.loginService.login(login);
-    return {
-      success: true,
-      message: result,
-    };
+    return result;
   }
 }

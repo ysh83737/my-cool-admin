@@ -2,12 +2,16 @@ import { Inject, Provide } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { JwtService } from '@midwayjs/jwt';
-import { MidwayCommonError } from '@midwayjs/core/dist/error/framework';
 import { Repository } from 'typeorm';
 import * as md5 from 'md5';
 import { User } from '../entity/user.entity';
-import { LoginDTO } from '../dto/login.dto';
+import { LoginDTO, LoginResultData } from '../dto/login.dto';
 import { USER_STATUS } from '../interface/user.interface';
+import {
+  UserFrozenError,
+  UserNotExistError,
+  UserPasswordError,
+} from '../error/user.error';
 
 @Provide()
 export class LoginService {
@@ -20,23 +24,24 @@ export class LoginService {
   @Inject()
   ctx: Context;
 
-  async login(login: LoginDTO) {
+  async login(login: LoginDTO): Promise<LoginResultData> {
     const { userName, password } = login;
     const user = await this.userEntity.findOneBy({ userName });
-    if (user) {
-      if (user.status === USER_STATUS.DISABLED) {
-        throw new MidwayCommonError('账号为禁用状态，无法登录');
-      }
-      if (user.password !== md5(password)) {
-        throw new MidwayCommonError('密码错误');
-      }
-      const token = await this.getToken(user);
-      this.ctx.cookies.set('token', token);
-      return {
-        user,
-        token,
-      };
+    if (!user) {
+      throw new UserNotExistError();
     }
+    if (user.status === USER_STATUS.DISABLED) {
+      throw new UserFrozenError('用户账户为禁用状态，无法登录');
+    }
+    if (user.password !== md5(password)) {
+      throw new UserPasswordError();
+    }
+    const token = await this.getToken(user);
+    this.ctx.cookies.set('token', token);
+    return {
+      user,
+      token,
+    };
   }
 
   async getToken(user: User) {
