@@ -1,13 +1,17 @@
-import { Catch } from '@midwayjs/core';
-import { Context } from '@midwayjs/koa';
+import { Catch, MidwayError } from '@midwayjs/core';
+import { RESPONSE_CODE } from '../constants/responseCode';
 
 @Catch()
 export class DefaultErrorFilter {
-  async catch(err: Error, ctx: Context) {
-    // 所有的未分类错误会到这里
+  async catch(err: Error | MidwayError) {
+    let code = RESPONSE_CODE.UNKNOWN as string;
+    if (err instanceof MidwayError) {
+      code = err.code as string;
+    }
     return {
-      success: false,
+      code,
       message: err.message,
+      data: null,
     };
   }
 }
