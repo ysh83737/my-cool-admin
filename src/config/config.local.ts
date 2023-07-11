@@ -11,7 +11,7 @@ export default {
         host: '127.0.0.1',
         port: 3306,
         username: 'root',
-        password: '',
+        password: 'Root123456',
         database: 'my_cool',
         // 自动建表 注意：线上部署的时候不要使用，有可能导致数据丢失
         synchronize: true,
