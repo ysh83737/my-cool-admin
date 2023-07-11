@@ -11,6 +11,7 @@ import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
 import { JwtMiddleware } from './middleware/jwt.middleware';
 import { ResponseMiddleware } from './middleware/response.middleware';
+import { ValidateErrorFilter } from './filter/validate.filter';
 
 @Configuration({
   imports: [
@@ -38,6 +39,10 @@ export class ContainerLifeCycle {
       ResponseMiddleware,
     ]);
     // add filter
-    this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
+    this.app.useFilter([
+      NotFoundFilter,
+      DefaultErrorFilter,
+      ValidateErrorFilter,
+    ]);
   }
 }
