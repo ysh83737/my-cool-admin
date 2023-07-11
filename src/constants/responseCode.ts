@@ -13,6 +13,12 @@ export enum COMMON_CODE {
 export enum A_USER_ERROR {
   /** 用户端错误 */
   USER_CLIENT_ERROR = 'A0001',
+  /** 用户账户不存在 */
+  USER_NOT_EXIST = 'A0201',
+  /** 用户账户被冻结 */
+  USER_FROZEN = 'A0202',
+  /** 用户密码错误 */
+  USER_PW_ERROR = 'A0210',
   /** 用户请求参数错误 */
   REQ_PARAM_ERROR = 'A0400',
   /** 请求必填参数为空 */
