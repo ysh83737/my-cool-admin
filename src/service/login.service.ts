@@ -5,7 +5,7 @@ import { JwtService } from '@midwayjs/jwt';
 import { Repository } from 'typeorm';
 import * as md5 from 'md5';
 import { User } from '../entity/user.entity';
-import { LoginDTO, LoginResultData } from '../dto/login.dto';
+import { LoginDTO } from '../dto/login.dto';
 import { USER_STATUS } from '../interface/user.interface';
 import {
   UserFrozenError,
@@ -24,9 +24,13 @@ export class LoginService {
   @Inject()
   ctx: Context;
 
-  async login(login: LoginDTO): Promise<LoginResultData> {
+  async login(login: LoginDTO) {
     const { userName, password } = login;
-    const user = await this.userEntity.findOneBy({ userName });
+    const user = await this.userEntity
+      .createQueryBuilder('user')
+      .where(`user.userName="${userName}"`)
+      .addSelect(['user.password'])
+      .getOne();
     if (!user) {
       throw new UserNotExistError();
     }
@@ -38,10 +42,7 @@ export class LoginService {
     }
     const token = await this.getToken(user);
     this.ctx.cookies.set('token', token);
-    return {
-      user,
-      token,
-    };
+    return token;
   }
 
   async getToken(user: User) {

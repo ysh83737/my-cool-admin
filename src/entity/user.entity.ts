@@ -19,11 +19,13 @@ export class User {
 
   @CreateDateColumnPro({
     comment: '创建时间',
+    select: false,
   })
   createTime: Date;
 
   @UpdateDateColumnPro({
     comment: '修改时间',
+    select: false,
   })
   updateTime: Date;
 
@@ -34,7 +36,7 @@ export class User {
   })
   userName: string;
 
-  @Column({ comment: '密码' })
+  @Column({ comment: '密码', select: false })
   password: string;
 
   @ColumnPro({
@@ -48,6 +50,7 @@ export class User {
     comment: '密码版本, 作用是改完密码，让原来的token失效',
     type: 'smallint',
     default: 1,
+    select: false,
   })
   pwVersion: number;
 
