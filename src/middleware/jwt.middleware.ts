@@ -2,13 +2,14 @@ import { Inject, Middleware, httpError } from '@midwayjs/core';
 import { Context, NextFunction } from '@midwayjs/koa';
 import { JwtService } from '@midwayjs/jwt';
 import { UserJwtPayload } from '../interface/user.interface';
+import { IgnoreLogin } from './basic/IgnoreLogin';
 
 @Middleware()
-export class JwtMiddleware {
+export class JwtMiddleware extends IgnoreLogin {
   @Inject()
   jwtService: JwtService;
 
-  public static getName() {
+  static getName() {
     return 'jwt';
   }
 
@@ -32,9 +33,5 @@ export class JwtMiddleware {
       }
       await next();
     };
-  }
-
-  public match(ctx: Context) {
-    return !ctx.path.includes('/login');
   }
 }

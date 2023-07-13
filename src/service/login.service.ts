@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import * as md5 from 'md5';
 import { User } from '../entity/user.entity';
 import { LoginDTO } from '../dto/login.dto';
-import { USER_STATUS } from '../interface/user.interface';
+import { USER_STATUS, UserJwtPayload } from '../interface/user.interface';
 import {
   UserFrozenError,
   UserNotExistError,
@@ -46,7 +46,8 @@ export class LoginService {
   }
 
   async getToken(user: User) {
-    const { id, userName } = user;
-    return this.jwtService.sign({ id, userName });
+    const { id, userName, pwVersion } = user;
+    const payload: UserJwtPayload = { id, userName, pwVersion };
+    return this.jwtService.sign(payload);
   }
 }

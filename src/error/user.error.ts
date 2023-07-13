@@ -23,6 +23,12 @@ export class UserPasswordError extends MidwayError {
   }
 }
 
+export class PasswordInvalidError extends MidwayError {
+  constructor(message?: string) {
+    super(message ?? '密码校验失败', A_USER_ERROR.PASSWORD_INVALID);
+  }
+}
+
 export class UserNotExistError extends MidwayError {
   constructor(message?: string) {
     super(message ?? '用户账户不存在', A_USER_ERROR.USER_NOT_EXIST);

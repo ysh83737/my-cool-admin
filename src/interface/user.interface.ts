@@ -9,4 +9,4 @@ export enum USER_STATUS {
 }
 
 /** 存放于jwt中的用户信息 */
-export type UserJwtPayload = Pick<User, 'id' | 'userName'>;
+export type UserJwtPayload = Pick<User, 'id' | 'userName' | 'pwVersion'>;

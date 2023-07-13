@@ -6,11 +6,12 @@ import { join } from 'path';
 import * as swagger from '@midwayjs/swagger';
 import * as orm from '@midwayjs/typeorm';
 import * as jwt from '@midwayjs/jwt';
-import { DefaultErrorFilter } from './filter/default.filter';
-import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
 import { JwtMiddleware } from './middleware/jwt.middleware';
+import { PwVersionMiddleware } from './middleware/pwv.middleware';
 import { ResponseMiddleware } from './middleware/response.middleware';
+import { DefaultErrorFilter } from './filter/default.filter';
+import { NotFoundFilter } from './filter/notfound.filter';
 import { ValidateErrorFilter } from './filter/validate.filter';
 
 @Configuration({
@@ -36,6 +37,7 @@ export class ContainerLifeCycle {
     this.app.useMiddleware([
       ReportMiddleware,
       JwtMiddleware,
+      PwVersionMiddleware,
       ResponseMiddleware,
     ]);
     // add filter
