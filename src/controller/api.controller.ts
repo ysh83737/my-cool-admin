@@ -3,7 +3,7 @@ import { Context } from '@midwayjs/koa';
 import { ApiResponse, ApiOperation, ApiTags } from '@midwayjs/swagger';
 import { UserService } from '../service/user.service';
 import { UpdatePasswordDTO, UserInfoResponse } from '../dto/user.dto';
-import { ResponseDTO } from '../dto/common.dto';
+import { ResponseEmptyDTO } from '../dto/common.dto';
 
 @ApiTags('业务API')
 @Controller('/api')
@@ -32,9 +32,10 @@ export class APIController {
     description: '作者：Shawn',
   })
   @ApiResponse({
-    type: ResponseDTO,
+    type: ResponseEmptyDTO,
   })
   async updatePassword(@Body() body: UpdatePasswordDTO) {
-    return await this.userService.updatePassword(body);
+    await this.userService.updatePassword(body);
+    return '';
   }
 }

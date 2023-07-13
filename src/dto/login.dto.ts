@@ -26,6 +26,7 @@ export class LoginDTO {
 export class LoginResponse extends ResponseDTO {
   @ApiProperty({
     description: '用户token',
+    example: 'xxxxxxxxxxxx',
   })
   data: string;
 }
