@@ -50,4 +50,8 @@ export class LoginService {
     const payload: UserJwtPayload = { id, userName, pwVersion };
     return this.jwtService.sign(payload);
   }
+
+  logout() {
+    this.ctx.cookies.set('token', '');
+  }
 }

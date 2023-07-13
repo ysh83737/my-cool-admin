@@ -1,7 +1,8 @@
-import { Body, Controller, Inject, Post } from '@midwayjs/core';
+import { Body, Controller, Get, Inject, Post } from '@midwayjs/core';
 import { ApiOperation, ApiResponse, ApiTags } from '@midwayjs/swagger';
 import { LoginService } from '../service/login.service';
 import { LoginDTO, LoginResponse } from '../dto/login.dto';
+import { ResponseEmptyDTO } from '../dto/common.dto';
 
 @ApiTags('登录相关')
 @Controller()
@@ -18,7 +19,18 @@ export class LoginController {
     type: LoginResponse,
   })
   async login(@Body() login: LoginDTO) {
-    const result = await this.loginService.login(login);
-    return result;
+    return await this.loginService.login(login);
+  }
+
+  @Get('/logout')
+  @ApiOperation({
+    summary: '登出',
+  })
+  @ApiResponse({
+    type: ResponseEmptyDTO,
+  })
+  logout() {
+    this.loginService.logout();
+    return '';
   }
 }
