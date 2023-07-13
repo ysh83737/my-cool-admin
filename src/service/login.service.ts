@@ -29,7 +29,7 @@ export class LoginService {
     const user = await this.userEntity
       .createQueryBuilder('user')
       .where(`user.userName="${userName}"`)
-      .addSelect(['user.password'])
+      .addSelect(['user.password', 'user.pwVersion'])
       .getOne();
     if (!user) {
       throw new UserNotExistError();
