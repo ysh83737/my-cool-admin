@@ -1,6 +1,7 @@
 import { Inject, Middleware, httpError } from '@midwayjs/core';
 import { Context, NextFunction } from '@midwayjs/koa';
 import { JwtService } from '@midwayjs/jwt';
+import { UserJwtPayload } from '../interface/user.interface';
 
 @Middleware()
 export class JwtMiddleware {
@@ -19,7 +20,13 @@ export class JwtMiddleware {
       }
 
       try {
-        await this.jwtService.verify(token, { complete: true });
+        const jwt = await this.jwtService.verify(token, {
+          complete: true,
+        });
+        if (typeof jwt !== 'string') {
+          const payload = jwt.payload as UserJwtPayload;
+          ctx.setAttr('user.jwt', payload);
+        }
       } catch (error) {
         throw new httpError.UnauthorizedError('Token失效');
       }
