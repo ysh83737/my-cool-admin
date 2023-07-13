@@ -1,10 +1,14 @@
-import { Column, Entity, Index } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  UpdateDateColumn,
+} from 'typeorm';
 import { USER_STATUS } from '../interface/user.interface';
 import {
   ColumnPro,
-  CreateDateColumnPro,
   PrimaryGeneratedColumnPro,
-  UpdateDateColumnPro,
 } from '../decorator/orm-pro.decorator';
 
 /** 用户信息 */
@@ -17,13 +21,13 @@ export class User {
   })
   id: number;
 
-  @CreateDateColumnPro({
+  @CreateDateColumn({
     comment: '创建时间',
     select: false,
   })
   createTime: Date;
 
-  @UpdateDateColumnPro({
+  @UpdateDateColumn({
     comment: '修改时间',
     select: false,
   })
@@ -33,6 +37,9 @@ export class User {
   @ColumnPro({
     length: 20,
     comment: '用户登录名',
+    api: {
+      example: 'someone',
+    },
   })
   userName: string;
 
@@ -43,6 +50,9 @@ export class User {
     comment: '姓名',
     length: 20,
     nullable: true,
+    api: {
+      example: 'someone',
+    },
   })
   name: string;
 
@@ -57,12 +67,18 @@ export class User {
   @ColumnPro({
     length: 20,
     comment: '用户昵称',
+    api: {
+      example: 'someone',
+    },
   })
   nickName: string;
 
   @ColumnPro({
     comment: '用户头像',
     nullable: true,
+    api: {
+      example: 'https://xx.com/someone-avatar.png',
+    },
   })
   avatarUrl: string;
 
@@ -71,18 +87,27 @@ export class User {
     comment: '手机号',
     nullable: true,
     length: 11,
+    api: {
+      example: '13500000000',
+    },
   })
   phone: string;
 
   @ColumnPro({
     comment: '邮箱',
     nullable: true,
+    api: {
+      format: 'email',
+    },
   })
   email: string;
 
   @ColumnPro({
     comment: '备注',
     nullable: true,
+    api: {
+      example: '',
+    },
   })
   remark: string;
 

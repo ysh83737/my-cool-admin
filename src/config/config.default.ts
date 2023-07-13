@@ -10,4 +10,12 @@ export default {
     secret: 'my-cool-admin',
     expiresIn: '2d',
   },
+  swagger: {
+    title: 'MyCoolAdmin',
+    description: '重写cool-admin的练习项目',
+    version: '1.0.0',
+    auth: {
+      authType: 'cookie',
+    },
+  },
 } as MidwayConfig;

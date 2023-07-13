@@ -1,8 +1,8 @@
 import { Inject, Controller, Get, Post, Body } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
-import { UserService } from '../service/user.service';
-import { UpdatePasswordDTO } from '../dto/user.dto';
 import { ApiResponse, ApiOperation, ApiTags } from '@midwayjs/swagger';
+import { UserService } from '../service/user.service';
+import { UpdatePasswordDTO, UserInfoResponse } from '../dto/user.dto';
 import { ResponseDTO } from '../dto/common.dto';
 
 @ApiTags('业务API')
@@ -15,16 +15,22 @@ export class APIController {
   userService: UserService;
 
   @Get('/getUserInfo')
+  @ApiOperation({
+    summary: '获取当前用户信息',
+  })
+  @ApiResponse({
+    type: UserInfoResponse,
+  })
   async getUser() {
     const user = await this.userService.getUser();
     return user;
   }
 
+  @Post('/updatePassword')
   @ApiOperation({
     summary: '修改用户密码',
-    description: '作者：袁绍宏',
+    description: '作者：Shawn',
   })
-  @Post('/updatePassword')
   @ApiResponse({
     type: ResponseDTO,
   })
