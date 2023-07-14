@@ -3,6 +3,7 @@ import {
   Column,
   ColumnOptions,
   CreateDateColumn,
+  JoinColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -25,6 +26,12 @@ export const PrimaryGeneratedColumnPro = ColumnFactory(PrimaryGeneratedColumn);
  * @param options
  */
 export const ColumnPro = ColumnFactory(Column);
+
+/**
+ * [装饰器]`JoinColumn`与`ApiProperty`的结合装饰器，复用`comment`数据
+ * @param options
+ */
+export const JoinColumnPro = ColumnFactory(JoinColumn);
 
 /**
  * [装饰器]`CreateDateColumn`与`ApiProperty`的结合装饰器，复用`comment`数据
