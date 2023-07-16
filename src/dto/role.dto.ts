@@ -1,8 +1,8 @@
 import { ApiProperty } from '@midwayjs/swagger';
-import { Role } from '../entity/role.entity';
-import { ROLE_STATUS } from '../interface/role.interface';
-import { ListData, Pager, ResponseDTO } from './common.dto';
 import { Rule, RuleType } from '@midwayjs/validate';
+import { ROLE_STATUS } from '../interface/role.interface';
+import { RoleBase, RoleData } from '../entity/role.entity';
+import { ListData, Pager, ResponseDTO } from './common.dto';
 
 export class RoleListFilter extends Pager {
   @ApiProperty({
@@ -32,9 +32,9 @@ export class RoleListData extends ListData {
     description: '角色列表',
     example: [],
     type: 'array',
-    items: { type: Role },
+    items: { type: RoleData },
   })
-  records: Role[];
+  records: RoleData[];
 }
 
 export class RoleListResponse extends ResponseDTO {
@@ -43,4 +43,19 @@ export class RoleListResponse extends ResponseDTO {
     type: RoleListData,
   })
   data: RoleListData;
+}
+
+export class AddRoleBody extends RoleBase {
+  @Rule(RuleType.string().label('角色名称').required().max(20))
+  roleName: string;
+  @Rule(RuleType.string().empty(''))
+  remark: string;
+}
+
+export class AddRoleResponse extends ResponseDTO {
+  @ApiProperty({
+    description: '角色id',
+    example: 1,
+  })
+  data: number;
 }

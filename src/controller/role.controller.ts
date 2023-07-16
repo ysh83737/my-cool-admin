@@ -1,7 +1,12 @@
 import { Body, Controller, Inject, Post } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { ApiOperation, ApiResponse, ApiTags } from '@midwayjs/swagger';
-import { RoleListFilter, RoleListResponse } from '../dto/role.dto';
+import {
+  AddRoleBody,
+  AddRoleResponse,
+  RoleListFilter,
+  RoleListResponse,
+} from '../dto/role.dto';
 import { RoleService } from '../service/role.service';
 
 @ApiTags('角色相关')
@@ -22,5 +27,16 @@ export class RoleController {
   @Post('/list')
   async getRoleList(@Body() body: RoleListFilter) {
     return await this.roleService.getRoleList(body);
+  }
+
+  @ApiOperation({
+    summary: '添加角色',
+  })
+  @ApiResponse({
+    type: AddRoleResponse,
+  })
+  @Post('/add')
+  async addRole(@Body() body: AddRoleBody) {
+    return await this.roleService.addRole(body);
   }
 }
