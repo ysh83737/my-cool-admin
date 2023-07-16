@@ -59,3 +59,31 @@ export class AddRoleResponse extends ResponseDTO {
   })
   data: number;
 }
+
+export class ChangeStatus {
+  @ApiProperty({
+    required: true,
+    description: '角色id',
+    type: 'integer',
+    example: 1,
+    minimum: 1,
+  })
+  @Rule(RuleType.number().integer().required().min(1))
+  id: number;
+
+  @ApiProperty({
+    required: true,
+    description: '0-禁用 1-正常',
+    type: 'enum',
+    enum: [ROLE_STATUS.AVAILABLE, ROLE_STATUS.DISABLED],
+    example: ROLE_STATUS.AVAILABLE,
+  })
+  @Rule(
+    RuleType.number()
+      .integer()
+      .required()
+      .min(ROLE_STATUS.DISABLED)
+      .max(ROLE_STATUS.AVAILABLE)
+  )
+  status: ROLE_STATUS;
+}

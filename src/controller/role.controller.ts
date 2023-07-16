@@ -4,9 +4,11 @@ import { ApiOperation, ApiResponse, ApiTags } from '@midwayjs/swagger';
 import {
   AddRoleBody,
   AddRoleResponse,
+  ChangeStatus,
   RoleListFilter,
   RoleListResponse,
 } from '../dto/role.dto';
+import { ResponseEmptyDTO } from '../dto/common.dto';
 import { RoleService } from '../service/role.service';
 
 @ApiTags('角色相关')
@@ -38,5 +40,17 @@ export class RoleController {
   @Post('/add')
   async addRole(@Body() body: AddRoleBody) {
     return await this.roleService.addRole(body);
+  }
+
+  @ApiOperation({
+    summary: '修改角色状态',
+  })
+  @ApiResponse({
+    type: ResponseEmptyDTO,
+  })
+  @Post('/status')
+  async changeStatus(@Body() body: ChangeStatus) {
+    await this.roleService.changeStatus(body);
+    return '';
   }
 }

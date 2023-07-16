@@ -1,9 +1,9 @@
 import { Inject, Provide } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { Role } from '../entity/role.entity';
 import { Repository } from 'typeorm';
-import { AddRoleBody, RoleListFilter } from '../dto/role.dto';
+import { Role } from '../entity/role.entity';
+import { AddRoleBody, ChangeStatus, RoleListFilter } from '../dto/role.dto';
 import { RequestParamError } from '../error/user.error';
 
 @Provide()
@@ -39,5 +39,14 @@ export class RoleService {
     Object.assign(role, body, { roleName });
     const result = await this.roleEntity.save(role);
     return result.id;
+  }
+
+  async changeStatus({ id, status }: ChangeStatus) {
+    const role = await this.roleEntity.findOneBy({ id });
+    if (!role) {
+      throw new RequestParamError('角色不存在');
+    }
+    role.status = status;
+    this.roleEntity.save(role);
   }
 }
