@@ -5,6 +5,7 @@ import {
   AddRoleBody,
   AddRoleResponse,
   ChangeStatus,
+  EditRoleBody,
   RoleListFilter,
   RoleListResponse,
 } from '../dto/role.dto';
@@ -40,6 +41,18 @@ export class RoleController {
   @Post('/add')
   async addRole(@Body() body: AddRoleBody) {
     return await this.roleService.addRole(body);
+  }
+
+  @ApiOperation({
+    summary: '编辑角色',
+  })
+  @ApiResponse({
+    type: ResponseEmptyDTO,
+  })
+  @Post('/edit')
+  async editRole(@Body() body: EditRoleBody) {
+    await this.roleService.editRole(body);
+    return '';
   }
 
   @ApiOperation({

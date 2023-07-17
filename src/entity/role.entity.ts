@@ -12,6 +12,7 @@ export class RoleBase {
     comment: '角色名称',
     length: 20,
     api: {
+      required: true,
       example: 'role-xxx',
     },
   })

@@ -87,3 +87,15 @@ export class ChangeStatus {
   )
   status: ROLE_STATUS;
 }
+
+export class EditRoleBody extends AddRoleBody {
+  @ApiProperty({
+    required: true,
+    description: '角色id',
+    type: 'integer',
+    example: 1,
+    minimum: 1,
+  })
+  @Rule(RuleType.number().integer().required().min(1))
+  id: number;
+}

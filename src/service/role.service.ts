@@ -3,7 +3,12 @@ import { Context } from '@midwayjs/koa';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from '../entity/role.entity';
-import { AddRoleBody, ChangeStatus, RoleListFilter } from '../dto/role.dto';
+import {
+  AddRoleBody,
+  ChangeStatus,
+  EditRoleBody,
+  RoleListFilter,
+} from '../dto/role.dto';
 import { RequestParamError } from '../error/user.error';
 
 @Provide()
@@ -39,6 +44,25 @@ export class RoleService {
     Object.assign(role, body, { roleName });
     const result = await this.roleEntity.save(role);
     return result.id;
+  }
+
+  async editRole(body: EditRoleBody) {
+    const { id, remark } = body;
+    const roleName = body.roleName.trim();
+    const role = await this.roleEntity.findOneBy({ id });
+    if (!role) {
+      throw new RequestParamError('角色不存在');
+    }
+    const isRepeat = await this.roleEntity
+      .createQueryBuilder('role')
+      .where(`role.roleName="${roleName}"`)
+      .andWhere(`id!=${id}`)
+      .getExists();
+    if (isRepeat) {
+      throw new RequestParamError('已存在相同的角色名');
+    }
+    Object.assign(role, body, { roleName, remark });
+    await this.roleEntity.save(role);
   }
 
   async changeStatus({ id, status }: ChangeStatus) {
