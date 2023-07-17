@@ -59,8 +59,7 @@ export class AddRoleResponse extends ResponseDTO {
   })
   data: number;
 }
-
-export class ChangeStatus {
+export class DeleteRole {
   @ApiProperty({
     required: true,
     description: '角色id',
@@ -70,7 +69,9 @@ export class ChangeStatus {
   })
   @Rule(RuleType.number().integer().required().min(1))
   id: number;
+}
 
+export class ChangeStatus extends DeleteRole {
   @ApiProperty({
     required: true,
     description: '0-禁用 1-正常',

@@ -6,10 +6,12 @@ import { Role } from '../entity/role.entity';
 import {
   AddRoleBody,
   ChangeStatus,
+  DeleteRole,
   EditRoleBody,
   RoleListFilter,
 } from '../dto/role.dto';
 import { RequestParamError } from '../error/user.error';
+import { ExecuteError } from '../error/business.error';
 
 @Provide()
 export class RoleService {
@@ -63,6 +65,19 @@ export class RoleService {
     }
     Object.assign(role, body, { roleName, remark });
     await this.roleEntity.save(role);
+  }
+  async deleteRole({ id }: DeleteRole) {
+    const isExist = await this.roleEntity
+      .createQueryBuilder('role')
+      .where(`role.id="${id}"`)
+      .getExists();
+    if (!isExist) {
+      throw new RequestParamError('角色不存在');
+    }
+    const result = await this.roleEntity.delete(id);
+    if (result.affected === 0) {
+      return new ExecuteError('删除失败，请重试');
+    }
   }
 
   async changeStatus({ id, status }: ChangeStatus) {

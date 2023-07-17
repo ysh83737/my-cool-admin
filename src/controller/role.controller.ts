@@ -5,6 +5,7 @@ import {
   AddRoleBody,
   AddRoleResponse,
   ChangeStatus,
+  DeleteRole,
   EditRoleBody,
   RoleListFilter,
   RoleListResponse,
@@ -52,6 +53,18 @@ export class RoleController {
   @Post('/edit')
   async editRole(@Body() body: EditRoleBody) {
     await this.roleService.editRole(body);
+    return '';
+  }
+
+  @ApiOperation({
+    summary: '删除角色',
+  })
+  @ApiResponse({
+    type: ResponseEmptyDTO,
+  })
+  @Post('/delete')
+  async DeleteRole(@Body() body: DeleteRole) {
+    await this.roleService.deleteRole(body);
     return '';
   }
 
