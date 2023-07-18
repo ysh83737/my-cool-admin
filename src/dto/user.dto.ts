@@ -94,7 +94,7 @@ export class EditUserBody extends AddUserBody {
 }
 
 /** 修改用户密码 */
-export class UpdatePasswordDTO {
+export class ChangePasswordBody {
   @ApiProperty({
     required: true,
     description: '新密码（需经过md5加密传输）',

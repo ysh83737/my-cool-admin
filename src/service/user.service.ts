@@ -4,7 +4,7 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
 import * as md5 from 'md5';
 import { User } from '../entity/user.entity';
-import { UpdatePasswordDTO } from '../dto/user.dto';
+import { ChangePasswordBody } from '../dto/user.dto';
 
 @Provide()
 export class UserService {
@@ -14,13 +14,7 @@ export class UserService {
   @Inject()
   ctx: Context;
 
-  async getUser() {
-    const { id } = this.ctx.getAttr('user.jwt');
-    const user = await this.userEntity.findOneBy({ id });
-    return user;
-  }
-
-  async updatePassword(body: UpdatePasswordDTO) {
+  async updatePassword(body: ChangePasswordBody) {
     const { id } = this.ctx.getAttr('user.jwt');
     const user = await this.userEntity
       .createQueryBuilder('user')
@@ -31,5 +25,11 @@ export class UserService {
     user.pwVersion++;
     this.userEntity.save(user);
     return null;
+  }
+
+  async getUser() {
+    const { id } = this.ctx.getAttr('user.jwt');
+    const user = await this.userEntity.findOneBy({ id });
+    return user;
   }
 }
