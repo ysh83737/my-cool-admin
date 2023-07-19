@@ -99,7 +99,9 @@ export class UserService {
     const userName = body.userName?.trim();
     const phone = body.phone?.trim();
     const { roleId, status, page, pageSize } = body;
-    const querier = this.userEntity.createQueryBuilder('user');
+    const querier = this.userEntity
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.role', 'role');
     if (userName) querier.andWhere(`user.userName like "%${userName}%"`);
     if (phone) querier.andWhere(`user.phone like "%${phone}%"`);
     if (roleId) querier.andWhere(`user.roleId=${roleId}`);
@@ -120,7 +122,10 @@ export class UserService {
   }
 
   async getUserById(id: number) {
-    const user = this.userEntity.findOneBy({ id });
+    const user = await this.userEntity.findOne({
+      relations: ['role'],
+      where: { id },
+    });
     if (!user) {
       throw new RequestParamError('用户不存在');
     }
