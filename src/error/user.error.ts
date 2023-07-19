@@ -11,6 +11,18 @@ export class UserClientError extends MidwayError {
   }
 }
 
+export class UserRegistryError extends MidwayError {
+  constructor(message?: string) {
+    super(message ?? '用户注册错误', 'A0100');
+  }
+}
+
+export class UserRepeatError extends MidwayError {
+  constructor(message?: string) {
+    super(message ?? '用户已存在', 'A0111');
+  }
+}
+
 export class UserFrozenError extends MidwayError {
   constructor(message?: string) {
     super(message ?? '用户账户被冻结', A_USER_ERROR.USER_FROZEN);
