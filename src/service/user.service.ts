@@ -30,6 +30,7 @@ export class UserService {
   async addUser(body: AddUserBody) {
     const userName = body.userName.trim();
     const phone = body.phone.trim();
+    const password = md5(body.password);
 
     let isRepeat = await this.userEntity.exist({ where: { userName } });
     if (isRepeat) throw new UserRepeatError('已存在相同的用户登录名');
@@ -41,7 +42,7 @@ export class UserService {
 
     const user = new User();
     try {
-      Object.assign(user, body, { userName, phone, role });
+      Object.assign(user, body, { userName, phone, password, role });
       await this.userEntity.save(user);
     } catch (error) {
       throw new ExecuteError(error?.message);
