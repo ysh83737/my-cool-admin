@@ -25,7 +25,7 @@ export class RoleService {
     const trimRoleName = roleName.trim();
     const [records, total] = await this.roleEntity
       .createQueryBuilder('role')
-      .where(trimRoleName ? `role.roleName like %${trimRoleName}%` : '')
+      .where(trimRoleName ? `role.roleName like "%${trimRoleName}%"` : '')
       .andWhere(`status="${status}"`)
       .orderBy('role.updateTime', 'DESC')
       .skip((page - 1) * pageSize)
@@ -51,10 +51,6 @@ export class RoleService {
   async editRole(body: EditRoleBody) {
     const { id, remark } = body;
     const roleName = body.roleName.trim();
-    const role = await this.roleEntity.findOneBy({ id });
-    if (!role) {
-      throw new RequestParamError('角色不存在');
-    }
     const isRepeat = await this.roleEntity
       .createQueryBuilder('role')
       .where(`role.roleName="${roleName}"`)
@@ -63,6 +59,7 @@ export class RoleService {
     if (isRepeat) {
       throw new RequestParamError('已存在相同的角色名');
     }
+    const role = await this.getRole(id);
     Object.assign(role, body, { roleName, remark });
     await this.roleEntity.save(role);
   }
@@ -76,16 +73,21 @@ export class RoleService {
     }
     const result = await this.roleEntity.delete(id);
     if (result.affected === 0) {
-      return new ExecuteError('删除失败，请重试');
+      throw new ExecuteError('删除失败，请重试');
     }
   }
 
   async changeStatus({ id, status }: ChangeStatus) {
+    const role = await this.getRole(id);
+    role.status = status;
+    this.roleEntity.save(role);
+  }
+
+  async getRole(id: number) {
     const role = await this.roleEntity.findOneBy({ id });
     if (!role) {
       throw new RequestParamError('角色不存在');
     }
-    role.status = status;
-    this.roleEntity.save(role);
+    return role;
   }
 }
