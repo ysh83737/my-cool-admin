@@ -84,6 +84,12 @@ export class UserService {
 
     const user = await this.getUserById(id);
     Object.assign(user, body, { phone });
+
+    const roleId = body.roleId;
+    if (roleId) {
+      const role = await this.roleService.getRole(roleId);
+      user.role = role;
+    }
     await this.userEntity.save(user);
   }
 
