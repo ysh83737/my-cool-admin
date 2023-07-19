@@ -70,13 +70,18 @@ export class UserService {
 
   async editUser(body: EditUserBody) {
     const { id } = body;
-    const phone = body.phone.trim();
-    const isRepeat = await this.userEntity
+    const phone = body.phone?.trim();
+    const querier = this.userEntity
       .createQueryBuilder('user')
-      .where(`user.id!=${id}`)
-      .andWhere(`user.phone="${phone}"`)
-      .getExists();
+      .where(`user.id!=${id}`);
+    let checkRepeat = false;
+    if (phone) {
+      checkRepeat = true;
+      querier.andWhere(`user.phone="${phone}"`);
+    }
+    const isRepeat = checkRepeat && (await querier.getExists());
     if (isRepeat) throw new UserRepeatError('已存在相同的手机号');
+
     const user = await this.getUserById(id);
     Object.assign(user, body, { phone });
     await this.userEntity.save(user);
