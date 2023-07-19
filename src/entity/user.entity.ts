@@ -3,7 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   Index,
-  OneToOne,
+  ManyToOne,
   UpdateDateColumn,
 } from 'typeorm';
 import { USER_STATUS } from '../interface/user.interface';
@@ -105,7 +105,7 @@ export class UserData extends UserBase {
 }
 
 /** 用户完整数据 */
-@Entity('user_info')
+@Entity('user')
 export class User extends UserData {
   @CreateDateColumn({
     comment: '创建时间',
@@ -130,7 +130,7 @@ export class User extends UserData {
   })
   pwVersion: number;
 
-  @OneToOne(() => Role)
+  @ManyToOne(() => Role)
   @JoinColumnPro({
     comment: '角色',
     nullable: true,
