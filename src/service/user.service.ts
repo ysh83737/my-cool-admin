@@ -4,7 +4,17 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
 import * as md5 from 'md5';
 import { User } from '../entity/user.entity';
-import { ChangePasswordBody } from '../dto/user.dto';
+import {
+  AddUserBody,
+  ChangePasswordBody,
+  ChangeStatusBody,
+  DeleteUserBody,
+  EditUserBody,
+  UserListFilter,
+} from '../dto/user.dto';
+import { RequestParamError, UserRepeatError } from '../error/user.error';
+import { ExecuteError } from '../error/business.error';
+import { RoleService } from './role.service';
 
 @Provide()
 export class UserService {
@@ -14,7 +24,64 @@ export class UserService {
   @Inject()
   ctx: Context;
 
-  async updatePassword(body: ChangePasswordBody) {
+  @Inject()
+  roleService: RoleService;
+
+  async addUser(body: AddUserBody) {
+    const userName = body.userName.trim();
+    const phone = body.phone.trim();
+
+    let isRepeat = await this.userEntity.exist({ where: { userName } });
+    if (isRepeat) throw new UserRepeatError('已存在相同的用户登录名');
+    isRepeat = await this.userEntity.exist({ where: { phone } });
+    if (isRepeat) throw new UserRepeatError('已存在相同的手机号');
+
+    const roleId = body.roleId;
+    const role = await this.roleService.getRole(roleId);
+
+    const user = new User();
+    try {
+      Object.assign(user, body, { userName, phone, role });
+      await this.userEntity.save(user);
+    } catch (error) {
+      throw new ExecuteError(error?.message);
+    }
+
+    return user.id;
+  }
+
+  async deleteUser({ id }: DeleteUserBody) {
+    const isExist = await this.userEntity.exist({ where: { id } });
+    if (!isExist) {
+      throw new RequestParamError('用户不存在');
+    }
+    const result = await this.userEntity.delete(id);
+    if (result.affected === 0) {
+      throw new ExecuteError('删除失败，请重试');
+    }
+  }
+
+  async changeUserStatus({ id, status }: ChangeStatusBody) {
+    const user = await this.getUserById(id);
+    user.status = status;
+    this.userEntity.save(user);
+  }
+
+  async editUser(body: EditUserBody) {
+    const { id } = body;
+    const phone = body.phone.trim();
+    const isRepeat = await this.userEntity
+      .createQueryBuilder('user')
+      .where(`user.id!=${id}`)
+      .andWhere(`user.phone="${phone}"`)
+      .getExists();
+    if (isRepeat) throw new UserRepeatError('已存在相同的手机号');
+    const user = await this.getUserById(id);
+    Object.assign(user, body, { phone });
+    await this.userEntity.save(user);
+  }
+
+  async changePassword(body: ChangePasswordBody) {
     const { id } = this.ctx.getAttr('user.jwt');
     const user = await this.userEntity
       .createQueryBuilder('user')
@@ -27,9 +94,35 @@ export class UserService {
     return null;
   }
 
-  async getUser() {
+  async userList(body: UserListFilter) {
+    const userName = body.userName?.trim();
+    const phone = body.phone?.trim();
+    const { roleId, status, page, pageSize } = body;
+    const querier = this.userEntity.createQueryBuilder('user');
+    if (userName) querier.andWhere(`user.userName like "%${userName}%"`);
+    if (phone) querier.andWhere(`user.phone like "%${phone}%"`);
+    if (roleId) querier.andWhere(`user.roleId=${roleId}`);
+    if (typeof status === 'number') {
+      querier.andWhere(`user.status="${status}"`);
+    }
+    const [records, total] = await querier
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getManyAndCount();
+    return { records, total };
+  }
+
+  /** 获取当前用户信息 */
+  async getUserInfo() {
     const { id } = this.ctx.getAttr('user.jwt');
-    const user = await this.userEntity.findOneBy({ id });
+    return await this.getUserById(id);
+  }
+
+  async getUserById(id: number) {
+    const user = this.userEntity.findOneBy({ id });
+    if (!user) {
+      throw new RequestParamError('用户不存在');
+    }
     return user;
   }
 }

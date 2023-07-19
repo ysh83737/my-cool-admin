@@ -1,21 +1,11 @@
 import { ApiProperty } from '@midwayjs/swagger';
 import { Rule, RuleType } from '@midwayjs/validate';
 import { ParamEmptyError } from '../error/user.error';
-import { User, UserBase } from '../entity/user.entity';
+import { User, UserBase, UserMinimum } from '../entity/user.entity';
 import { USER_STATUS } from '../interface/user.interface';
-import { Pager, ResponseDTO } from './common.dto';
+import { ListData, Pager, ResponseDTO } from './common.dto';
 
-/** 增加用户 */
-export class AddUserBody extends UserBase {
-  @Rule(RuleType.string().label('用户登录名').required().max(20))
-  userName: string;
-
-  @Rule(RuleType.string().label('用户昵称').required().max(20))
-  nickName: string;
-
-  @Rule(RuleType.string().label('姓名').required().max(20))
-  name: string;
-
+export class UserMinimumBody extends UserMinimum {
   @Rule(RuleType.string().label('用户头像').empty(''))
   avatarUrl: string;
 
@@ -37,6 +27,26 @@ export class AddUserBody extends UserBase {
   })
   @Rule(RuleType.number().integer().label('角色id').empty('').min(1))
   roleId: number;
+}
+/** 增加用户 */
+export class AddUserBody extends UserMinimumBody implements UserBase {
+  @Rule(RuleType.string().label('用户登录名').required().max(20))
+  userName: string;
+
+  @ApiProperty({
+    required: true,
+    description: '密码（需经过md5加密传输）',
+    format: 'password',
+    example: '******',
+  })
+  @Rule(RuleType.string().label('密码').required())
+  password: string;
+
+  @Rule(RuleType.string().label('用户昵称').required().max(20))
+  nickName: string;
+
+  @Rule(RuleType.string().label('姓名').required().max(20))
+  name: string;
 }
 export class AddUserResponse extends ResponseDTO {
   @ApiProperty({
@@ -81,7 +91,7 @@ export class ChangeStatusBody extends UserId {
 }
 
 /** 修改用户信息 */
-export class EditUserBody extends AddUserBody {
+export class EditUserBody extends UserMinimumBody {
   @ApiProperty({
     required: true,
     description: '用户id',
@@ -91,6 +101,12 @@ export class EditUserBody extends AddUserBody {
   })
   @Rule(RuleType.number().integer().required().min(1))
   id: number;
+
+  @Rule(RuleType.string().label('用户昵称').empty(undefined).max(20))
+  nickName: string;
+
+  @Rule(RuleType.string().label('姓名').empty(undefined).max(20))
+  name: string;
 }
 
 /** 修改用户密码 */
@@ -111,17 +127,17 @@ export class ChangePasswordBody {
 export class UserListFilter extends Pager {
   @ApiProperty({
     description: '用户昵称/姓名，支持模糊搜索',
-    example: 'role-x',
+    example: 'user-x',
   })
   @Rule(RuleType.string().empty(''))
-  roleName: string;
+  userName: string;
 
   @ApiProperty({
     description: '手机号',
     example: '13500000000',
     maxLength: 11,
   })
-  @Rule(RuleType.string().empty('').length(11))
+  @Rule(RuleType.string().empty(''))
   phone: string;
 
   @ApiProperty({
@@ -148,6 +164,22 @@ export class UserListFilter extends Pager {
       .empty('')
   )
   status: USER_STATUS;
+}
+class UserListData extends ListData {
+  @ApiProperty({
+    description: '用户列表',
+    type: 'array',
+    items: { type: User },
+    example: [],
+  })
+  records: User[];
+}
+export class UserListResponse extends ResponseDTO {
+  @ApiProperty({
+    description: '响应数据',
+    type: UserListData,
+  })
+  data: UserListData;
 }
 
 export class UserInfoResponse extends ResponseDTO {

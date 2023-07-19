@@ -14,18 +14,8 @@ import {
 } from '../decorator/orm-pro.decorator';
 import { Role } from './role.entity';
 
-/** 用户基础数据（新增） */
-export class UserBase {
-  @Index({ unique: true })
-  @ColumnPro({
-    length: 20,
-    comment: '用户登录名',
-    api: {
-      example: 'someone',
-    },
-  })
-  userName: string;
-
+/** 最小化用户信息 */
+export class UserMinimum {
   @ColumnPro({
     length: 20,
     comment: '用户昵称',
@@ -82,13 +72,18 @@ export class UserBase {
     },
   })
   remark: string;
-
-  @OneToOne(() => Role)
-  @JoinColumnPro({
-    comment: '角色',
-    nullable: true,
+}
+/** 用户基础数据（新增） */
+export class UserBase extends UserMinimum {
+  @Index({ unique: true })
+  @ColumnPro({
+    length: 20,
+    comment: '用户登录名',
+    api: {
+      example: 'someone',
+    },
   })
-  role: Role;
+  userName: string;
 }
 
 /** 用户一般数据（查询） */
@@ -134,4 +129,11 @@ export class User extends UserData {
     select: false,
   })
   pwVersion: number;
+
+  @OneToOne(() => Role)
+  @JoinColumnPro({
+    comment: '角色',
+    nullable: true,
+  })
+  role: Role;
 }
