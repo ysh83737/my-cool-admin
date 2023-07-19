@@ -23,10 +23,14 @@ export class RoleService {
 
   async getRoleList({ page, pageSize, roleName = '', status }: RoleListFilter) {
     const trimRoleName = roleName.trim();
-    const [records, total] = await this.roleEntity
-      .createQueryBuilder('role')
-      .where(trimRoleName ? `role.roleName like "%${trimRoleName}%"` : '')
-      .andWhere(`status="${status}"`)
+    const querier = this.roleEntity.createQueryBuilder('role');
+    if (trimRoleName) {
+      querier.andWhere(`role.roleName like "%${trimRoleName}%"`);
+    }
+    if (status) {
+      querier.andWhere(`status="${status}"`);
+    }
+    const [records, total] = await querier
       .orderBy('role.updateTime', 'DESC')
       .skip((page - 1) * pageSize)
       .take(pageSize)
