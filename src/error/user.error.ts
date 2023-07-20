@@ -47,6 +47,18 @@ export class UserNotExistError extends MidwayError {
   }
 }
 
+export class CaptchaError extends MidwayError {
+  constructor(message?: string) {
+    super(message ?? '用户验证码错误', 'A0240');
+  }
+}
+
+export class CaptchaLimitError extends MidwayError {
+  constructor(message?: string) {
+    super(message ?? '用户验证码尝试次数超限', 'A0241');
+  }
+}
+
 export class RequestParamError extends MidwayError {
   constructor(message?: string) {
     super(message ?? '用户请求参数错误', A_USER_ERROR.REQ_PARAM_ERROR);
