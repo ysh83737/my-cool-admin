@@ -9,6 +9,7 @@ import { User } from '../entity/user.entity';
 import { LoginDTO } from '../dto/login.dto';
 import { USER_STATUS, UserJwtPayload } from '../interface/user.interface';
 import {
+  CaptchaError,
   UserFrozenError,
   UserNotExistError,
   UserPasswordError,
@@ -26,7 +27,10 @@ export class LoginService {
   ctx: Context;
 
   async login(login: LoginDTO) {
-    const { userName, password } = login;
+    const { userName, password, captcha } = login;
+    if (captcha.toLowerCase() !== this.ctx.session.captcha) {
+      throw new CaptchaError('验证码错误');
+    }
     const user = await this.userEntity
       .createQueryBuilder('user')
       .where(`user.userName="${userName}"`)
@@ -63,7 +67,7 @@ export class LoginService {
       noise: 3,
       color: true,
     });
-    this.ctx.session.captcha = captcha.text;
+    this.ctx.session.captcha = captcha.text.toLowerCase();
     this.ctx.type = 'image/svg+xml';
     return captcha.data;
   }

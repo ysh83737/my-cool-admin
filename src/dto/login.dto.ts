@@ -22,6 +22,14 @@ export class LoginDTO {
   })
   @Rule(RuleType.string().required().error(new ParamEmptyError('密码不能为空')))
   password: string;
+
+  @ApiProperty({
+    required: true,
+    description: '验证码',
+    example: 'xxxx',
+  })
+  @Rule(RuleType.string().label('验证码').required())
+  captcha: string;
 }
 export class LoginResponse extends ResponseDTO {
   @ApiProperty({
