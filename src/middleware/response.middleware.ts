@@ -7,6 +7,9 @@ export class ResponseMiddleware implements IMiddleware<Context, NextFunction> {
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
       const data = await next();
+      if (ctx.type === 'image/svg+xml') {
+        return data;
+      }
       return {
         code: RESPONSE_CODE.SUCCESS,
         data,
