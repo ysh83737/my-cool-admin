@@ -4,6 +4,7 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { JwtService } from '@midwayjs/jwt';
 import { Repository } from 'typeorm';
 import * as md5 from 'md5';
+import * as svgCaptcha from 'svg-captcha';
 import { User } from '../entity/user.entity';
 import { LoginDTO } from '../dto/login.dto';
 import { USER_STATUS, UserJwtPayload } from '../interface/user.interface';
@@ -53,5 +54,17 @@ export class LoginService {
 
   logout() {
     this.ctx.cookies.set('token', '');
+  }
+
+  getCaptcha() {
+    const captcha = svgCaptcha.create({
+      size: 4,
+      ignoreChars: '0o1iIl',
+      noise: 3,
+      color: true,
+    });
+    this.ctx.session.captcha = captcha.text;
+    this.ctx.type = 'image/svg+xml';
+    return captcha.data;
   }
 }

@@ -17,6 +17,7 @@
     "@midwayjs/validate": "^3.0.0",
     "md5": "^2.3.0",
     "mysql2": "^3.3.5",
+    "svg-captcha": "^1.4.0",
     "swagger-ui-dist": "^5.0.0",
     "typeorm": "^0.3.16"
   },

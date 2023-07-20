@@ -33,4 +33,25 @@ export class LoginController {
     this.loginService.logout();
     return '';
   }
+
+  @ApiOperation({
+    summary: '获取图片验证码',
+  })
+  @ApiResponse({
+    content: {
+      'image/svg+xml': {
+        schema: {
+          description: '验证码SVG代码',
+          xml: {
+            name: 'svg',
+          },
+          example: '...',
+        },
+      },
+    },
+  })
+  @Get('/captcha')
+  getCaptcha() {
+    return this.loginService.getCaptcha();
+  }
 }
