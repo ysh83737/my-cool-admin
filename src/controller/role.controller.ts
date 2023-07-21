@@ -23,14 +23,15 @@ export class RoleController {
   roleService: RoleService;
 
   @ApiOperation({
-    summary: '角色列表',
+    summary: '删除角色',
   })
   @ApiResponse({
-    type: RoleListResponse,
+    type: ResponseEmptyDTO,
   })
-  @Post('/list')
-  async getRoleList(@Body() body: RoleListFilter) {
-    return await this.roleService.getRoleList(body);
+  @Post('/delete')
+  async DeleteRole(@Body() body: DeleteRole) {
+    await this.roleService.deleteRole(body);
+    return '';
   }
 
   @ApiOperation({
@@ -57,18 +58,6 @@ export class RoleController {
   }
 
   @ApiOperation({
-    summary: '删除角色',
-  })
-  @ApiResponse({
-    type: ResponseEmptyDTO,
-  })
-  @Post('/delete')
-  async DeleteRole(@Body() body: DeleteRole) {
-    await this.roleService.deleteRole(body);
-    return '';
-  }
-
-  @ApiOperation({
     summary: '修改角色状态',
   })
   @ApiResponse({
@@ -78,5 +67,16 @@ export class RoleController {
   async changeStatus(@Body() body: ChangeStatus) {
     await this.roleService.changeStatus(body);
     return '';
+  }
+
+  @ApiOperation({
+    summary: '角色列表',
+  })
+  @ApiResponse({
+    type: RoleListResponse,
+  })
+  @Post('/list')
+  async getRoleList(@Body() body: RoleListFilter) {
+    return await this.roleService.getRoleList(body);
   }
 }
