@@ -1,9 +1,13 @@
 import { Inject, Provide } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Not, Repository } from 'typeorm';
 import { Authority } from '../entity/authority.entity';
-import { AddAuthority, AuthorityList } from '../dto/authority.dto';
+import {
+  AddAuthority,
+  AuthorityList,
+  EditAuthority,
+} from '../dto/authority.dto';
 import { RequestParamError } from '../error/user.error';
 import { ExecuteError } from '../error/business.error';
 
@@ -54,6 +58,27 @@ export class AuthorityService {
     if (result.affected === 0) {
       throw new ExecuteError('删除失败，请重试');
     }
+  }
+
+  async editAuthority({ id, name, parentId, type }: EditAuthority) {
+    name = name?.trim();
+    if (name) {
+      const isRepeat = await this.authorityEntity.exist({
+        where: { name, id: Not(id) },
+      });
+      if (isRepeat) {
+        throw new RequestParamError('已存在相同的权限名');
+      }
+    }
+
+    const item = await this.getAuthorityById(id);
+    if (parentId) {
+      const parent = await this.getAuthorityById(parentId);
+      item.parent = parent;
+    }
+    item.name = name;
+    item.type = type;
+    this.authorityEntity.save(item);
   }
 
   async authorityList(body: AuthorityList) {

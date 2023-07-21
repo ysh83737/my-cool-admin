@@ -13,6 +13,7 @@ import {
   AddAuthorityResponse,
   AuthorityList,
   AuthorityListResponse,
+  EditAuthority,
 } from '../dto/authority.dto';
 
 @ApiTags('权限相关')
@@ -51,6 +52,18 @@ export class AuthorityController {
     id: number
   ) {
     await this.authorityService.deleteAuthority(id);
+    return '';
+  }
+
+  @ApiOperation({
+    summary: '编辑权限',
+  })
+  @ApiResponse({
+    type: ResponseEmptyDTO,
+  })
+  @Post('/edit')
+  async editAuthority(@Body() body: EditAuthority) {
+    await this.authorityService.editAuthority(body);
     return '';
   }
 

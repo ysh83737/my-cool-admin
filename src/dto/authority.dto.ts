@@ -9,6 +9,7 @@ export class AddAuthority {
     required: true,
     description: '权限名称',
     example: 'auth-xx',
+    maxLength: 20,
   })
   @Rule(RuleType.string().label('权限名称').required().max(20))
   name: string;
@@ -39,6 +40,26 @@ export class AddAuthorityResponse extends ResponseDTO {
     example: 1,
   })
   data: number;
+}
+
+export class EditAuthority extends AddAuthority {
+  @ApiProperty({
+    required: true,
+    description: '权限id',
+    example: 1,
+    type: 'integer',
+  })
+  @Rule(RuleType.number().integer().required().min(1))
+  id: number;
+
+  @ApiProperty({
+    required: true,
+    description: '权限名称',
+    example: 'auth-xx',
+    maxLength: 20,
+  })
+  @Rule(RuleType.string().label('权限名称').max(20))
+  name: string;
 }
 
 export class AuthorityList {
