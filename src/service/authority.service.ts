@@ -20,10 +20,12 @@ export class AuthorityService {
     if (isRepeat) {
       throw new RequestParamError('已存在相同的权限名');
     }
+    const { parentId, type } = body;
+
     const item = new Authority();
     item.name = name;
+    item.type = type;
 
-    const { parentId } = body;
     if (parentId) {
       const parent = await this.getAuthorityById(parentId);
       item.parent = parent;

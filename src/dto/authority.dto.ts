@@ -1,7 +1,8 @@
 import { ApiProperty } from '@midwayjs/swagger';
 import { Rule, RuleType } from '@midwayjs/validate';
-import { ResponseDTO } from './common.dto';
 import { Authority } from '../entity/authority.entity';
+import { AUTHORITY_TYPE } from '../interface/authority.interface';
+import { ResponseDTO } from './common.dto';
 
 export class AddAuthority {
   @ApiProperty({
@@ -13,8 +14,18 @@ export class AddAuthority {
   name: string;
 
   @ApiProperty({
+    description: '权限类型 1-菜单 2-按钮',
+    type: 'enum',
+    enum: [AUTHORITY_TYPE.MENU, AUTHORITY_TYPE.BUTTON],
+    example: AUTHORITY_TYPE.MENU,
+    default: AUTHORITY_TYPE.MENU,
+  })
+  @Rule(RuleType.number().valid(...Object.values(AUTHORITY_TYPE)))
+  type: AUTHORITY_TYPE;
+
+  @ApiProperty({
     description: '父权限id',
-    format: 'integer',
+    type: 'integer',
     example: 1,
     minimum: 1,
   })
