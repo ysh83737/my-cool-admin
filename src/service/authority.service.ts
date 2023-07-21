@@ -5,6 +5,7 @@ import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Authority } from '../entity/authority.entity';
 import { AddAuthority, AuthorityList } from '../dto/authority.dto';
 import { RequestParamError } from '../error/user.error';
+import { ExecuteError } from '../error/business.error';
 
 @Provide()
 export class AuthorityService {
@@ -35,6 +36,26 @@ export class AuthorityService {
     return item.id;
   }
 
+  async deleteAuthority(id: number) {
+    const item = await this.getAuthorityById(id);
+
+    const tree = await this.authorityEntity.manager
+      .getTreeRepository(Authority)
+      .findDescendantsTree(item);
+    /** 需要清除父权限的数据 */
+    const { children } = tree;
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      child.parent = null; // 清除父权限
+      await this.authorityEntity.save(child); // 保存
+    }
+
+    const result = await this.authorityEntity.delete(id);
+    if (result.affected === 0) {
+      throw new ExecuteError('删除失败，请重试');
+    }
+  }
+
   async authorityList(body: AuthorityList) {
     const name = body.name?.trim();
     const where: FindOptionsWhere<Authority> = {};
@@ -47,6 +68,11 @@ export class AuthorityService {
     return trees;
   }
 
+  /**
+   * 查询指定id的单条权限数据
+   * @param id 查询id
+   * @returns 该id的单条权限数据
+   */
   async getAuthorityById(id: number) {
     const item = await this.authorityEntity.findOneBy({ id });
     if (!item) {
