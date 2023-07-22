@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Role } from '../entity/role.entity';
 import {
   AddRoleBody,
+  ChangeAuthority,
   ChangeStatus,
   DeleteRole,
   EditRoleBody,
@@ -12,6 +13,7 @@ import {
 } from '../dto/role.dto';
 import { RequestParamError } from '../error/user.error';
 import { ExecuteError } from '../error/business.error';
+import { AuthorityService } from './authority.service';
 
 @Provide()
 export class RoleService {
@@ -20,6 +22,9 @@ export class RoleService {
 
   @InjectEntityModel(Role)
   roleEntity: Repository<Role>;
+
+  @Inject()
+  authorityService: AuthorityService;
 
   async addRole(body: AddRoleBody) {
     const roleName = body.roleName.trim();
@@ -71,6 +76,19 @@ export class RoleService {
     this.roleEntity.save(role);
   }
 
+  async changeAuthority({ id, authorities }: ChangeAuthority) {
+    const role = await this.getRole(id);
+
+    if (authorities) {
+      let authItems = [];
+      if (authorities.length > 0) {
+        authItems = await this.authorityService.getAuthorityById(authorities);
+      }
+      role.authorities = authItems;
+    }
+    this.roleEntity.save(role);
+  }
+
   async getRoleList({ page, pageSize, roleName = '', status }: RoleListFilter) {
     const trimRoleName = roleName.trim();
     const querier = this.roleEntity.createQueryBuilder('role');
@@ -86,6 +104,14 @@ export class RoleService {
       .take(pageSize)
       .getManyAndCount();
     return { records, total };
+  }
+
+  async roleAuthority(id: number) {
+    const role = await this.roleEntity.findOne({
+      where: { id },
+      relations: ['authorities'],
+    });
+    return role;
   }
 
   async getRole(id: number) {
