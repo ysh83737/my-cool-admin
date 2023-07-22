@@ -1,9 +1,17 @@
-import { CreateDateColumn, Entity, Index, UpdateDateColumn } from 'typeorm';
+import {
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  UpdateDateColumn,
+} from 'typeorm';
 import {
   ColumnPro,
   PrimaryGeneratedColumnPro,
 } from '../decorator/orm-pro.decorator';
 import { ROLE_STATUS } from '../interface/role.interface';
+import { Authority } from './authority.entity';
 
 /** 角色基础数据（新增） */
 export class RoleBase {
@@ -58,4 +66,8 @@ export class Role extends RoleData {
     select: false,
   })
   updateTime: Date;
+
+  @ManyToMany(() => Authority)
+  @JoinTable()
+  authorities: Authority[];
 }
