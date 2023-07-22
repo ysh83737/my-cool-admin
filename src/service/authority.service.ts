@@ -1,7 +1,7 @@
 import { Inject, Provide } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { FindOptionsWhere, Like, Not, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Like, Not, Repository } from 'typeorm';
 import { Authority } from '../entity/authority.entity';
 import {
   AddAuthority,
@@ -98,11 +98,38 @@ export class AuthorityService {
    * @param id 查询id
    * @returns 该id的单条权限数据
    */
-  async getAuthorityById(id: number) {
-    const item = await this.authorityEntity.findOneBy({ id });
-    if (!item) {
-      throw new RequestParamError(`不存在id=${id}的权限`);
+  getAuthorityById(id: number): Promise<Authority>;
+  /**
+   * 查询多个id的权限数据（不含树形结构）
+   * @param ids 查询id列表
+   * @returns 这些id的权限数据（不含树形结构）
+   */
+  getAuthorityById(ids: number[]): Promise<Authority[]>;
+  async getAuthorityById(id: number | number[]) {
+    let single = false;
+    let ids: number[];
+    if (Array.isArray(id)) {
+      ids = id;
+    } else {
+      ids = [id];
+      single = true;
     }
-    return item;
+    const items = await this.authorityEntity.findBy({ id: In(ids) });
+    const item = items[0];
+    if (single) {
+      if (!item) {
+        throw new RequestParamError(`不存在id=${id}的权限`);
+      }
+      return item;
+    } else {
+      if (items.length < ids.length) {
+        const idSet = new Set(ids);
+        items.forEach(({ id }) => idSet.delete(id));
+        throw new RequestParamError(
+          `不存在 id为${[...idSet].join('/')} 的权限`
+        );
+      }
+      return items;
+    }
   }
 }
