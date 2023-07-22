@@ -115,21 +115,11 @@ export class AuthorityService {
       single = true;
     }
     const items = await this.authorityEntity.findBy({ id: In(ids) });
-    const item = items[0];
-    if (single) {
-      if (!item) {
-        throw new RequestParamError(`不存在id=${id}的权限`);
-      }
-      return item;
-    } else {
-      if (items.length < ids.length) {
-        const idSet = new Set(ids);
-        items.forEach(({ id }) => idSet.delete(id));
-        throw new RequestParamError(
-          `不存在 id为${[...idSet].join('/')} 的权限`
-        );
-      }
-      return items;
+    if (items.length < ids.length) {
+      const idSet = new Set(ids);
+      items.forEach(({ id }) => idSet.delete(id));
+      throw new RequestParamError(`不存在 id=${[...idSet].join('/')} 的权限`);
     }
+    return single ? items[0] : items;
   }
 }
