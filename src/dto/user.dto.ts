@@ -4,6 +4,7 @@ import { ParamEmptyError } from '../error/user.error';
 import { User, UserBase, UserMinimum } from '../entity/user.entity';
 import { USER_STATUS } from '../interface/user.interface';
 import { ListData, Pager, ResponseDTO } from './common.dto';
+import { Authority } from '../entity/authority.entity';
 
 export class UserMinimumBody extends UserMinimum {
   @Rule(RuleType.string().label('用户头像').empty(''))
@@ -182,10 +183,22 @@ export class UserListResponse extends ResponseDTO {
   data: UserListData;
 }
 
-export class UserInfoResponse extends ResponseDTO {
+export class UserInfoData {
   @ApiProperty({
     description: '用户信息',
     type: User,
   })
-  data: User;
+  user: User;
+
+  @ApiProperty({
+    description: '权限数据列表',
+    type: 'array',
+    items: { type: Authority },
+    example: [],
+  })
+  authorities: Authority[];
+}
+
+export class UserInfoResponse extends ResponseDTO {
+  data: UserInfoData;
 }

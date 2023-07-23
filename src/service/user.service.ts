@@ -10,6 +10,7 @@ import {
   ChangeStatusBody,
   DeleteUserBody,
   EditUserBody,
+  UserInfoData,
   UserListFilter,
 } from '../dto/user.dto';
 import { RequestParamError, UserRepeatError } from '../error/user.error';
@@ -129,7 +130,12 @@ export class UserService {
   /** 获取当前用户信息 */
   async getUserInfo() {
     const { id } = this.ctx.getAttr('user.jwt');
-    return await this.getUserById(id);
+    const user = await this.getUserById(id);
+    const output: UserInfoData = { user, authorities: [] };
+    if (user.role) {
+      output.authorities = await this.roleService.roleAuthority(user.role.id);
+    }
+    return output;
   }
 
   async getUserById(id: number) {
