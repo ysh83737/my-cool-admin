@@ -111,7 +111,10 @@ export class RoleService {
       where: { id },
       relations: ['authorities'],
     });
-    return role;
+    if (!role) {
+      throw new RequestParamError('角色不存在');
+    }
+    return role.authorities;
   }
 
   async getRole(id: number) {
