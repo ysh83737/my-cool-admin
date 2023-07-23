@@ -38,12 +38,14 @@ export class UserService {
     isRepeat = await this.userEntity.exist({ where: { phone } });
     if (isRepeat) throw new UserRepeatError('已存在相同的手机号');
 
-    const roleId = body.roleId;
-    const role = await this.roleService.getRole(roleId);
-
     const user = new User();
     try {
-      Object.assign(user, body, { userName, phone, password, role });
+      const roleId = body.roleId;
+      if (roleId) {
+        const role = await this.roleService.getRole(roleId);
+        user.role = role;
+      }
+      Object.assign(user, body, { userName, phone, password });
       await this.userEntity.save(user);
     } catch (error) {
       throw new ExecuteError(error?.message);
