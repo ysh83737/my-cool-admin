@@ -64,12 +64,6 @@ export class UserService {
     }
   }
 
-  async changeUserStatus({ id, status }: ChangeStatusBody) {
-    const user = await this.getUserById(id);
-    user.status = status;
-    this.userEntity.save(user);
-  }
-
   async editUser(body: EditUserBody) {
     const { id } = body;
     const phone = body.phone?.trim();
@@ -93,6 +87,12 @@ export class UserService {
       user.role = role;
     }
     await this.userEntity.save(user);
+  }
+
+  async changeUserStatus({ id, status }: ChangeStatusBody) {
+    const user = await this.getUserById(id);
+    user.status = status;
+    this.userEntity.save(user);
   }
 
   async changePassword(body: ChangePasswordBody) {

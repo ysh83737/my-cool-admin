@@ -38,6 +38,17 @@ export class RoleController {
   roleService: RoleService;
 
   @ApiOperation({
+    summary: '添加角色',
+  })
+  @ApiResponse({
+    type: AddRoleResponse,
+  })
+  @Post('/add')
+  async addRole(@Body() body: AddRoleBody) {
+    return await this.roleService.addRole(body);
+  }
+
+  @ApiOperation({
     summary: '删除角色',
   })
   @ApiResponse({
@@ -53,17 +64,6 @@ export class RoleController {
   async DeleteRole(@Param() id: number) {
     await this.roleService.deleteRole(id);
     return '';
-  }
-
-  @ApiOperation({
-    summary: '添加角色',
-  })
-  @ApiResponse({
-    type: AddRoleResponse,
-  })
-  @Post('/add')
-  async addRole(@Body() body: AddRoleBody) {
-    return await this.roleService.addRole(body);
   }
 
   @ApiOperation({

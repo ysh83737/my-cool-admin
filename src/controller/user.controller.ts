@@ -66,18 +66,6 @@ export class UserController {
   }
 
   @ApiOperation({
-    summary: '修改用户状态',
-  })
-  @ApiResponse({
-    type: ResponseEmptyDTO,
-  })
-  @Post('/status')
-  async changeUserStatus(@Body() body: ChangeStatusBody) {
-    await this.userService.changeUserStatus(body);
-    return '';
-  }
-
-  @ApiOperation({
     summary: '修改用户信息',
   })
   @ApiResponse({
@@ -86,6 +74,18 @@ export class UserController {
   @Post('/edit')
   async editUser(@Body() body: EditUserBody) {
     await this.userService.editUser(body);
+    return '';
+  }
+
+  @ApiOperation({
+    summary: '修改用户状态',
+  })
+  @ApiResponse({
+    type: ResponseEmptyDTO,
+  })
+  @Post('/status')
+  async changeUserStatus(@Body() body: ChangeStatusBody) {
+    await this.userService.changeUserStatus(body);
     return '';
   }
 
