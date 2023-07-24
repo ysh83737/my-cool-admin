@@ -1,5 +1,18 @@
-import { Body, Controller, Get, Inject, Post } from '@midwayjs/core';
-import { ApiOperation, ApiResponse, ApiTags } from '@midwayjs/swagger';
+import {
+  Body,
+  Controller,
+  Del,
+  Get,
+  Inject,
+  Param,
+  Post,
+} from '@midwayjs/core';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@midwayjs/swagger';
 import { Context } from '@midwayjs/koa';
 import { ResponseEmptyDTO } from '../dto/common.dto';
 import {
@@ -7,7 +20,6 @@ import {
   AddUserResponse,
   ChangePasswordBody,
   ChangeStatusBody,
-  DeleteUserBody,
   EditUserBody,
   UserInfoResponse,
   UserListFilter,
@@ -41,9 +53,15 @@ export class UserController {
   @ApiResponse({
     type: ResponseEmptyDTO,
   })
-  @Post('/delete')
-  async DeleteUserBody(@Body() body: DeleteUserBody) {
-    await this.userService.deleteUser(body);
+  @ApiParam({
+    name: 'id',
+    description: '用户id',
+    type: 'integer',
+    example: 1,
+  })
+  @Del('/delete/:id')
+  async DeleteUserBody(@Param() id: number) {
+    await this.userService.deleteUser(id);
     return '';
   }
 

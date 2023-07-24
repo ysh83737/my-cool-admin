@@ -8,7 +8,6 @@ import {
   AddUserBody,
   ChangePasswordBody,
   ChangeStatusBody,
-  DeleteUserBody,
   EditUserBody,
   UserInfoData,
   UserListFilter,
@@ -54,7 +53,7 @@ export class UserService {
     return user.id;
   }
 
-  async deleteUser({ id }: DeleteUserBody) {
+  async deleteUser(id: number) {
     const isExist = await this.userEntity.exist({ where: { id } });
     if (!isExist) {
       throw new RequestParamError('用户不存在');

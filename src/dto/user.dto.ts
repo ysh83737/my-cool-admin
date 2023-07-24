@@ -69,9 +69,6 @@ class UserId {
   id: number;
 }
 
-/** 删除用户 */
-export class DeleteUserBody extends UserId {}
-
 /** 修改用户状态 */
 export class ChangeStatusBody extends UserId {
   @ApiProperty({
