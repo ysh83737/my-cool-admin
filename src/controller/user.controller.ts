@@ -89,13 +89,13 @@ export class UserController {
     return '';
   }
 
-  @Post('/changePassword')
   @ApiOperation({
     summary: '修改当前用户密码',
   })
   @ApiResponse({
     type: ResponseEmptyDTO,
   })
+  @Post('/password')
   async changePassword(@Body() body: ChangePasswordBody) {
     await this.userService.changePassword(body);
     return '';
@@ -112,13 +112,13 @@ export class UserController {
     return await this.userService.userList(body);
   }
 
-  @Get('/getUserInfo')
   @ApiOperation({
     summary: '获取当前用户信息',
   })
   @ApiResponse({
     type: UserInfoResponse,
   })
+  @Get('/getUserInfo')
   async getUserInfo() {
     const user = await this.userService.getUserInfo();
     return user;
