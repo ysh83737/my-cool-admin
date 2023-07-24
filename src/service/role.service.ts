@@ -7,7 +7,6 @@ import {
   AddRoleBody,
   ChangeAuthority,
   ChangeStatus,
-  DeleteRole,
   EditRoleBody,
   RoleListFilter,
 } from '../dto/role.dto';
@@ -40,7 +39,7 @@ export class RoleService {
     return result.id;
   }
 
-  async deleteRole({ id }: DeleteRole) {
+  async deleteRole(id: number) {
     const isExist = await this.roleEntity
       .createQueryBuilder('role')
       .where(`role.id="${id}"`)

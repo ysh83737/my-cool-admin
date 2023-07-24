@@ -33,8 +33,6 @@ export class RoleId {
   id: number;
 }
 
-export class DeleteRole extends RoleId {}
-
 export class EditRoleBody extends AddRoleBody {
   @ApiProperty({
     required: true,
@@ -119,7 +117,7 @@ export class RoleListResponse extends ResponseDTO {
   data: RoleListData;
 }
 
-export class RoleAuthority extends DeleteRole {}
+export class RoleAuthority extends RoleId {}
 
 export class RoleAuthorityResponse extends ResponseDTO {
   @ApiProperty({

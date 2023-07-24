@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@midwayjs/core';
+import {
+  Body,
+  Controller,
+  Del,
+  Get,
+  Inject,
+  Param,
+  Post,
+} from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import {
   ApiOperation,
@@ -11,7 +19,6 @@ import {
   AddRoleResponse,
   ChangeAuthority,
   ChangeStatus,
-  DeleteRole,
   EditRoleBody,
   RoleAuthorityResponse,
   RoleListFilter,
@@ -36,9 +43,15 @@ export class RoleController {
   @ApiResponse({
     type: ResponseEmptyDTO,
   })
-  @Post('/delete')
-  async DeleteRole(@Body() body: DeleteRole) {
-    await this.roleService.deleteRole(body);
+  @ApiParam({
+    name: 'id',
+    description: '角色id',
+    type: 'integer',
+    example: 1,
+  })
+  @Del('/delete/:id')
+  async DeleteRole(@Param() id: number) {
+    await this.roleService.deleteRole(id);
     return '';
   }
 
