@@ -105,6 +105,7 @@ export class UserService {
     user.password = md5(body.password);
     user.pwVersion++;
     this.userEntity.save(user);
+    this.ctx.session.pwVersion = user.pwVersion;
     return null;
   }
 

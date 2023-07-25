@@ -1,4 +1,3 @@
-import '@midwayjs/core';
 import { UserJwtPayload } from '../src/interface/user.interface';
 
 declare module '@midwayjs/core' {
@@ -14,5 +13,12 @@ declare module '@midwayjs/core' {
      * @param key
      */
     getAttr(key: 'user.jwt'): UserJwtPayload;
+  }
+}
+
+declare module '@midwayjs/session' {
+  export interface ISession {
+    /** 密码版本 */
+    pwVersion?: number;
   }
 }

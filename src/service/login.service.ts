@@ -46,6 +46,7 @@ export class LoginService {
       throw new UserPasswordError();
     }
     const token = await this.getToken(user);
+    this.ctx.session.pwVersion = user.pwVersion;
     this.ctx.cookies.set('token', token);
     return token;
   }
