@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Inject, Post } from '@midwayjs/core';
 import { ApiOperation, ApiResponse, ApiTags } from '@midwayjs/swagger';
 import { LoginService } from '../service/login.service';
+import { CaptchaService } from '../service/captcha.service';
 import { LoginDTO, LoginResponse } from '../dto/login.dto';
 import { ResponseEmptyDTO } from '../dto/common.dto';
 
@@ -9,6 +10,9 @@ import { ResponseEmptyDTO } from '../dto/common.dto';
 export class LoginController {
   @Inject()
   loginService: LoginService;
+
+  @Inject()
+  captchaService: CaptchaService;
 
   @Post('/login')
   @ApiOperation({
@@ -52,6 +56,6 @@ export class LoginController {
   })
   @Get('/captcha')
   getCaptcha() {
-    return this.loginService.getCaptcha();
+    return this.captchaService.getCaptcha();
   }
 }
