@@ -11,43 +11,21 @@ export enum COMMON_CODE {
  * 错误来源于用户，比如参数错误，用户安装版本过低，用户支付超时等问题
  */
 export enum A_USER_ERROR {
-  /** 用户端错误 */
-  USER_CLIENT_ERROR = 'A0001',
-  /** 密码校验失败 */
-  PASSWORD_INVALID = 'A0120',
-  /** 用户账户不存在 */
-  USER_NOT_EXIST = 'A0201',
-  /** 用户账户被冻结 */
-  USER_FROZEN = 'A0202',
-  /** 用户密码错误 */
-  USER_PW_ERROR = 'A0210',
   /** 用户请求参数错误 */
   REQ_PARAM_ERROR = 'A0400',
-  /** 请求必填参数为空 */
-  PARAM_EMPTY = 'A0410',
 }
 
 /**
  * [B类]错误码
  * 错误来源于当前系统，往往是业务逻辑出错，或程序健壮性差等问题
  */
-export enum B_BUSINESS_ERROR {
-  /** 系统执行出错 */
-  EXECUTE_ERROR = 'B0001',
-  /** 系统执行超时 */
-  EXECUTE_TIMEOUT = 'B0100',
-}
+export enum B_BUSINESS_ERROR {}
 
 /**
  * [C类]错误码
  * 错误来源于第三方服务，比如 CDN 服务出错，消息投递超时等问题
  */
-export enum C_3RD_ERROR {
-  /** 调用第三方服务出错 */
-  CALL_3RD_ERROR = 'C0001',
-  /** 中间件服务出错 */
-  MIDDLE_ERROR = 'C0100',
-}
+export enum C_3RD_ERROR {}
 
 /**
  * 接口响应码
