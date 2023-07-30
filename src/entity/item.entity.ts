@@ -10,7 +10,7 @@ import { ITEM_STATUS } from '../interface/item.interface';
 
 /** 商品数据 */
 @Entity('item')
-export class ItemEntity {
+export class Item {
   @Index({ unique: true })
   @PrimaryGeneratedColumn({
     comment: '商品id',
