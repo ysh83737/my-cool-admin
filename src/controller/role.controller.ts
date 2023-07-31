@@ -61,7 +61,7 @@ export class RoleController {
     example: 1,
   })
   @Del('/delete/:id')
-  async DeleteRole(@Param() id: number) {
+  async DeleteRole(@Param('id') id: number) {
     await this.roleService.deleteRole(id);
     return '';
   }

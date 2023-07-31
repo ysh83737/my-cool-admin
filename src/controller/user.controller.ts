@@ -60,7 +60,7 @@ export class UserController {
     example: 1,
   })
   @Del('/delete/:id')
-  async DeleteUserBody(@Param() id: number) {
+  async DeleteUserBody(@Param('id') id: number) {
     await this.userService.deleteUser(id);
     return '';
   }
