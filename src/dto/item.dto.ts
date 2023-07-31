@@ -36,7 +36,7 @@ export class AddItem {
 
   @ApiProperty({
     description: '库存数量',
-    format: 'integer',
+    type: 'integer',
     example: 0,
     minimum: 0,
   })
@@ -46,7 +46,7 @@ export class AddItem {
 export class AddItemResponse extends ResponseDTO {
   @ApiProperty({
     description: '商品id',
-    format: 'integer',
+    type: 'integer',
     example: 1,
   })
   data: number;
@@ -73,7 +73,7 @@ export class EditItem extends ID {
 
   @ApiProperty({
     description: '库存数量',
-    format: 'integer',
+    type: 'integer',
     example: 0,
     minimum: 0,
   })
