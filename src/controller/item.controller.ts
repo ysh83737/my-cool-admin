@@ -1,4 +1,4 @@
-import { Body, Controller, Del, Param, Post } from '@midwayjs/core';
+import { Body, Controller, Del, Inject, Param, Post } from '@midwayjs/core';
 import {
   ApiOperation,
   ApiParam,
@@ -13,11 +13,14 @@ import {
   ItemListResponse,
 } from '../dto/item.dto';
 import { ResponseEmptyDTO } from '../dto/common.dto';
-import { RuleType, Valid } from '@midwayjs/validate';
+import { ItemService } from '../service/item.service';
 
 @ApiTags('商品相关')
 @Controller('/item')
 export class ItemController {
+  @Inject()
+  itemService: ItemService;
+
   @ApiOperation({
     summary: '添加商品',
   })
@@ -26,7 +29,7 @@ export class ItemController {
   })
   @Post('/add')
   async AddItem(@Body() body: AddItem) {
-    console.log('add item===', body);
+    return await this.itemService.addItem(body);
   }
 
   @ApiOperation({
@@ -42,12 +45,9 @@ export class ItemController {
     example: 1,
   })
   @Del('/delete/:id')
-  async deleteItem(
-    @Param()
-    @Valid(RuleType.number().integer().required().min(1))
-    id: number
-  ) {
-    console.log('delete===', id);
+  async deleteItem(@Param('id') id: number) {
+    await this.itemService.deleteItem(id);
+    return '';
   }
 
   @ApiOperation({
