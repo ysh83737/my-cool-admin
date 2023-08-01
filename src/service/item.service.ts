@@ -53,7 +53,7 @@ export class ItemService {
   async getItemById(id: number) {
     const item = await this.itemEntity.findOneBy({ id });
     if (!item) {
-      throw new RequestParamError('桑坡不存在');
+      throw new RequestParamError('商品不存在');
     }
     return item;
   }
