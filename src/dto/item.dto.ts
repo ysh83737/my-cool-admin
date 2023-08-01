@@ -7,7 +7,7 @@ import { Item } from '../entity/item.entity';
 class ID {
   @ApiProperty({
     description: '商品id',
-    format: 'integer',
+    type: 'integer',
     minimum: 1,
     example: 1,
   })
