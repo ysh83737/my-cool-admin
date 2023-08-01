@@ -87,7 +87,7 @@ export class ItemList {
     maxLength: 100,
     example: 'xx商品',
   })
-  @Rule(RuleType.string().max(100).empty())
+  @Rule(RuleType.string().max(100).empty(''))
   name: string;
 
   @ApiProperty({

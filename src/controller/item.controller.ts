@@ -58,7 +58,8 @@ export class ItemController {
   })
   @Post('/edit')
   async editItem(@Body() body: EditItem) {
-    console.log('edit====', body);
+    await this.itemService.editItem(body);
+    return '';
   }
 
   @ApiOperation({
@@ -69,6 +70,6 @@ export class ItemController {
   })
   @Post('/list')
   async itemList(@Body() body: ItemList) {
-    console.log('item list===', body);
+    return await this.itemService.itemList(body);
   }
 }
