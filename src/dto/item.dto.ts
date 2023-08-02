@@ -87,16 +87,20 @@ export class ItemList {
     maxLength: 100,
     example: 'xx商品',
   })
-  @Rule(RuleType.string().max(100).empty(''))
+  @Rule(RuleType.string().label('商品名称').max(100).empty(''))
   name: string;
 
   @ApiProperty({
     description: '商品状态',
     type: 'enum',
-    enum: ITEM_STATUS,
+    enum: [ITEM_STATUS.AVAILABLE, ITEM_STATUS.DISABLED],
     example: ITEM_STATUS.AVAILABLE,
   })
-  @Rule(RuleType.number().valid(...Object.values(ITEM_STATUS)))
+  @Rule(
+    RuleType.number()
+      .label('商品状态')
+      .valid(...Object.values(ITEM_STATUS))
+  )
   status: ITEM_STATUS;
 }
 export class ItemListData extends ListData {
