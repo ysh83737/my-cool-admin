@@ -44,7 +44,7 @@ export class Item {
   @Column({
     comment: '商品状态 0-下架 1-正常',
     type: 'enum',
-    enum: [ITEM_STATUS.AVAILABLE, ITEM_STATUS.DISABLED],
+    enum: ITEM_STATUS,
     default: ITEM_STATUS.DISABLED,
   })
   status: ITEM_STATUS;
