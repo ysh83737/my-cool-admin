@@ -3,7 +3,7 @@ import { Context } from '@midwayjs/koa';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Item } from '../entity/item.entity';
-import { AddItem, EditItem, ItemList } from '../dto/item.dto';
+import { AddItem, ChangeStatus, EditItem, ItemList } from '../dto/item.dto';
 import { ExecuteError } from '../error/business.error';
 import { RequestParamError } from '../error/user.error';
 
@@ -37,6 +37,13 @@ export class ItemService {
     const { id } = body;
     const item = await this.getItemById(id);
     Object.assign(item, body);
+    await this.itemEntity.save(item);
+  }
+
+  async changeStatus(body: ChangeStatus) {
+    const { id, status } = body;
+    const item = await this.getItemById(id);
+    item.status = status;
     await this.itemEntity.save(item);
   }
 

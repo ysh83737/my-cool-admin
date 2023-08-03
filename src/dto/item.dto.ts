@@ -81,6 +81,24 @@ export class EditItem extends ID {
   stock: number;
 }
 
+export class ChangeStatus extends ID {
+  @ApiProperty({
+    description: '商品状态 0-下架 1-正常',
+    required: true,
+    type: 'enum',
+    enum: [ITEM_STATUS.AVAILABLE, ITEM_STATUS.DISABLED],
+    example: ITEM_STATUS.AVAILABLE,
+  })
+  @Rule(
+    RuleType.number()
+      .integer()
+      .required()
+      .label('商品状态')
+      .valid(...Object.values(ITEM_STATUS))
+  )
+  status: ITEM_STATUS;
+}
+
 export class ItemList {
   @ApiProperty({
     description: '商品名称',
