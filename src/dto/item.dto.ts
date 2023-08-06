@@ -7,7 +7,9 @@ import { Item } from '../entity/item.entity';
 class ID {
   @ApiProperty({
     description: '商品id',
+    required: true,
     type: 'integer',
+    format: 'integer',
     minimum: 1,
     example: 1,
   })
@@ -51,8 +53,6 @@ export class AddItemResponse extends ResponseDTO {
   })
   data: number;
 }
-
-export class DeleteItem extends ID {}
 
 export class EditItem extends ID {
   @ApiProperty({
