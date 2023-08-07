@@ -9,6 +9,7 @@ import {
   AddItem,
   AddItemResponse,
   ChangeStatus,
+  ChangeStock,
   EditItem,
   ItemList,
   ItemListResponse,
@@ -72,6 +73,18 @@ export class ItemController {
   @Post('/status')
   async changeStatus(@Body() body: ChangeStatus) {
     await this.itemService.changeStatus(body);
+    return '';
+  }
+
+  @ApiOperation({
+    summary: '修改商品库存',
+  })
+  @ApiResponse({
+    type: ResponseEmptyDTO,
+  })
+  @Post('/stock')
+  async changeStock(@Body() body: ChangeStock) {
+    await this.itemService.changeStock(body);
     return '';
   }
 

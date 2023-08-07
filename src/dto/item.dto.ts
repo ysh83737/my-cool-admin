@@ -99,6 +99,18 @@ export class ChangeStatus extends ID {
   status: ITEM_STATUS;
 }
 
+export class ChangeStock extends ID {
+  @ApiProperty({
+    description: '库存数量',
+    required: true,
+    type: 'integer',
+    example: 0,
+    minimum: 0,
+  })
+  @Rule(RuleType.number().integer().required().min(0))
+  stock: number;
+}
+
 export class ItemList {
   @ApiProperty({
     description: '商品名称',
