@@ -70,15 +70,6 @@ export class EditItem extends ID {
   })
   @Rule(RuleType.string().max(500).empty())
   description: string;
-
-  @ApiProperty({
-    description: '库存数量',
-    type: 'integer',
-    example: 0,
-    minimum: 0,
-  })
-  @Rule(RuleType.number().integer().min(0).empty())
-  stock: number;
 }
 
 export class ChangeStatus extends ID {
