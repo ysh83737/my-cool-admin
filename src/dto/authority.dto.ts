@@ -53,7 +53,6 @@ export class EditAuthority extends AddAuthority {
   id: number;
 
   @ApiProperty({
-    required: true,
     description: '权限名称',
     example: 'auth-xx',
     maxLength: 20,
